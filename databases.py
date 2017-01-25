@@ -39,6 +39,5 @@ class users(Base):
 
 engine = create_engine('sqlite:///databases.db')
 Base.metadata.create_all(engine)
-
 DBSession = sessionmaker(bind=engine, autoflush=False)
 session = DBSession()
