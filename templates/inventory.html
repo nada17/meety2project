@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Available Books </title>
+</head>
+
+<body>
+{% if items==[] %}
+<p>There are currently no items in the catalog. </p>
+
+{% else %}
+
+<div class="product">
+	{% for item in items %}
+	<a href={{url_for('book', book_id=item.id)}}>
+		<p> {{item.name}}</p>
+		<img src={{item.imgurl}} height="250">
+	</a>
+	{% endfor %}
+</div>
+{% endif %}
+
+
+</body>
+</html>

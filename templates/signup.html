@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Fatfit 2.0</title>
-</head>
-<body>
-<form>
+<h1> Sign in </h1>
+
+<div class = 'flash'>
+	{% for message in get_flashed_messages() %}
+
+		<ul>
+			<li> <strong> {{ message }} </strong> </li>
+		</ul>
+	{% endfor %}
+</div>
+
+<form action = "{{url_for ('signup') }}" method = 'post'>
+
 	<input type="text" name="firstname" placeholder="First name"> <br>
 	<input type="text" name="lastname" placeholder="Last name"> <br>
 	<input type="text" name = "email" placeholder="Email"> <br>
@@ -13,7 +21,7 @@
 	<input type="text" name="img" placeholder="Image"> <br>
 	<input type="date" name="dob" placeholder="Date of birth"> <br>
 	<input type="text" name="phonenum" placeholder="Phone number"> <br>
-	<input type="submit" name="SUBMIT">
+	<input type="submit" name="Create Account">
 </form>
 </body>
 </html>
