@@ -14,7 +14,7 @@ def verify_password(email, password):
 
 @app.route('/')
 def world():
-	return "Hilol"
+	return "zidane sucks"
 @app.route('/home/')
 def home():
 	items = session.query(books).all()
@@ -27,15 +27,15 @@ def signup():
 		lastname = request.form['lastname']
 		email = request.form['email']
 		password = request.form['password']
-		image = request.form['img']
+		imgurluser = request.form['imgurluser']
 		dob = request.form['dob']
 		phonenum = request.form['phonenumber']
 		if firstname == "" or lastname == "" or email == "" or password == "" or dob == "" or phonenumber == "":
 			flash("Your form is missing arguments")
-			return redirect(url_for('signup.html'))
+			return redirect(url_for('signup'))
 		if session.query(user).filter_by(email=email). first() is not None:
 			flash("A user with this email address already exists")
-			return redirect(url_for('signup.html'))
+			return redirect(url_for('signup'))
 		user = user(firstname=firstname,lastname=lastname, email=email, dob=dob, phonenumber=phonenumber)
 		user.hash_password(password)
 		session.add(user)
@@ -43,7 +43,7 @@ def signup():
 		flash("User created successfully")
 		return redirect(url_for('home'))
 	else:
-		return render_template('signup.html')
+		return render_template('signup')
 
 
 
@@ -70,21 +70,54 @@ def login():
 			flash('Incorrect email/password combination')
 			return redirect(url_for('login'))
 
+@app.route('/newbook')
+def newbook():
+	if request.form == 'POST':
+		title = request.form['title']
+		author = request.form['author']
+		pubyear = request.form['pubyear']
+		imgurlbook = request.form['imgurlbook']
+		genre = request.form['genre']
+		location = request.form['location']
+		if title == "" or author == "" or pubyear == "" or genre == "" or location == "":
+			flash("Your form is missing arguements")
+			return redirect(url_for('newbook'))
+		book = book(title=title, author=author, pubyear=pubyear, imgurlbook=imgurlbook, genre=genre, location=location)
+		session.add(book)
+		session.commit()
+		flash("Book added successfully!")
+		return redirect(url_for('newbook'))
+	else:
+		return render_template('newbook.html')
+
+
 
 @app.route('/user/<username>')
 def user_profile(username):
 	return "lol"
 
 
-@app.route('/book/<int:product_id>')
+@app.route('/book/<int:book_id>')
 def book (book_id):
-	return "lul"
+	book = session.query(books).filter_by(id=book_id).one()
+	return render_template('inventory.html', book=book)
 
 
 
-#@app.route('/logout', methods = ['POST'])
-#def logout():
-	#return "lul"
+@app.route('/logout', methods = ['POST'])
+def logout():
+	if 'id' not in login_session:
+		flash("You must be logged in order to log out")
+		return redirect(url_for('login'))
+	del login_session['firstname']
+	del login_session['lastname']
+	del login_session['email']
+	del login_session['id']
+	flash("Logged out successfully")
+	return redirect(url_for('inventory'))
+
+
+
 
 
 if __name__ == '__main__':

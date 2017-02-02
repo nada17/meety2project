@@ -13,7 +13,7 @@ class books(Base):
 	title = Column(String)
 	author = Column(String)
 	pubyear = Column(Date)
-	imgurl = Column(String)
+	imgurlbook = Column(String)
 	genre = Column(String)
 	location = Column(String)
 
@@ -24,7 +24,7 @@ class users(Base):
 	lastname = Column(String)
 	email = Column(String, unique=True)
 	password = Column(String)
-	imgurl = Column(String)
+	imgurluser = Column(String)
 	dob = Column(Date)
 	phonenumber = Column(String)
 
