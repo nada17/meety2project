@@ -14,8 +14,8 @@ def verify_password(email, password):
 
 @app.route('/')
 def world():
-	return "zidane sucks"
-@app.route('/home/')
+	return "hello world"
+@app.route('/inventory/')
 def home():
 	items = session.query(books).all()
 	return render_template('inventory.html', items = items)
@@ -35,15 +35,15 @@ def signup():
 			return redirect(url_for('signup'))
 		if session.query(user).filter_by(email=email). first() is not None:
 			flash("A user with this email address already exists")
-			return redirect(url_for('signup'))
-		user = user(firstname=firstname,lastname=lastname, email=email, dob=dob, phonenumber=phonenumber)
+			return redirect(url_for('signup')) 
+		user = users(firstname=firstname,lastname=lastname, email=email, imgurluser=imgurluser, dob=dob, phonenumber=phonenumber)
 		user.hash_password(password)
 		session.add(user)
 		session.commit()
 		flash("User created successfully")
-		return redirect(url_for('home'))
+		return redirect(url_for('inventory'))
 	else:
-		return render_template('signup')
+		return render_template('signup.html')
 
 
 
@@ -92,9 +92,12 @@ def newbook():
 
 
 
-@app.route('/user/<username>')
-def user_profile(username):
-	return "lol"
+@app.route('/user/<email>')
+def user_profile(user_email):
+	user_email = session.query(users).filter_by(email).first(user_email=user_email)
+	return render_template('user.html', user_email=user_email)
+
+
 
 
 @app.route('/book/<int:book_id>')
