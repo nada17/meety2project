@@ -27,16 +27,17 @@ def signup():
 		lastname = request.form['lastname']
 		email = request.form['email']
 		password = request.form['password']
+		confirmpassword = request.form['confirmpassword']
 		imgurluser = request.form['imgurluser']
 		dob = request.form['dob']
-		phonenum = request.form['phonenumber']
-		if firstname == "" or lastname == "" or email == "" or password == "" or dob == "" or phonenumber == "":
+		phonenumber = request.form['phonenumber']
+		if firstname == "" or lastname == "" or email == "" or password == "" or confirmpassword == "" or dob == "" or phonenumber == "":
 			flash("Your form is missing arguments")
 			return redirect(url_for('signup'))
-		if session.query(user).filter_by(email=email). first() is not None:
+		if session.query(users).filter_by(email=email). first() is not None:
 			flash("A user with this email address already exists")
 			return redirect(url_for('signup')) 
-		user = users(firstname=firstname,lastname=lastname, email=email, imgurluser=imgurluser, dob=dob, phonenumber=phonenumber)
+		user = users(firstname=firstname,lastname=lastname, password=password, confirmpassword=confirmpassword, email=email, imgurluser=imgurluser, dob=dob, phonenumber=phonenumber)
 		user.hash_password(password)
 		session.add(user)
 		session.commit()
@@ -70,7 +71,7 @@ def login():
 			flash('Incorrect email/password combination')
 			return redirect(url_for('login'))
 
-@app.route('/newbook')
+@app.route('/newbook', methods=['GET', 'POST'])
 def newbook():
 	if request.form == 'POST':
 		title = request.form['title']
