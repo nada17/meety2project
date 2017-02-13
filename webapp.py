@@ -13,21 +13,21 @@ app.secret_key = "MY_SUPER_SECRET_KEY"
 # 		return False
 # 	g.user = user
 # 	return True
-
-def verify_password(email, password):
+	
+def verify_password(email, password1):
 	user = session.query(User).filter_by(email=email).first()
-	if pwd_context.encrypt(password) == user.password:
+	if user.hash_password(password1) == user.password and user is not None:
 		return True
 	return False
 
-def hash_password(password):
-	return pwd_context.encrypt(password)
+# def hash_password(password):
+# 	return pwd_context.encrypt(password)
 
 
 
 @app.route('/')
 def world():
-	return "hello world"
+	return render_template('home.html')
 @app.route('/home')
 def home():
 	items = session.query(Book).all()
@@ -51,11 +51,12 @@ def signup():
 		if session.query(User).filter_by(email=email). first() is not None:
 			flash("A user with this email address already exists")
 			return redirect(url_for('signup')) 
-		user = User(firstname=firstname,lastname=lastname, password=hash_password(password), email=email, imgurluser=imgurluser, dob=dob, phonenumber=phonenumber)
+		user = User(firstname=firstname,lastname=lastname, email=email, imgurluser=imgurluser, dob=dob, phonenumber=phonenumber)
+		user.hash_password(password)
 		session.add(user)
 		session.commit()
 		flash("User created successfully")
-		return redirect( url_for('home'))
+		return redirect(url_for('login'))
 	else:
 		return render_template('signup.html')
 
@@ -69,11 +70,15 @@ def login():
 	elif request.method == 'POST':
 		email = request.form['email']
 		password = request.form['password']
-		if email is None or password is None:
+		if email == "" or password == "":
 			flash("Missing Arguements")
 			return redirect(url_for('login'))
-		if verify_password(email, hash_password(password)):
-			user = session.query(User).filter_by(email=email).first()
+
+		user = session.query(User).filter_by(email=email).first()
+		if not user:
+			flash("Incorrect password / email combination")
+			return redirect(url_for('login'))
+		elif verify_password(user.email, password): 
 			flash('Login Successful. Welcome, %s' %user.firstname)
 			login_session['firstname']= user.firstname
 			login_session['lastname'] = user.lastname
@@ -81,13 +86,11 @@ def login():
 			print("LogIn")
 			login_session['id'] = user.id
 			return redirect(url_for('home'))
-		else:
-			flash('Incorrect email/password combination')
-			return redirect(url_for('login'))
+		
 
 @app.route('/newbook', methods=['GET', 'POST'])
 def newbook():
-	if request.form == 'POST':
+	if request.method == 'POST':
 		title = request.form['title']
 		author = request.form['author']
 		pubyear = request.form['pubyear']
@@ -101,7 +104,7 @@ def newbook():
 		session.add(book)
 		session.commit()
 		flash("Book added successfully!")
-		return redirect(url_for('newbook'))
+		return redirect(url_for('home'))
 	else:
 		return render_template('newbook.html')
 
@@ -118,7 +121,7 @@ def user_profile(user_email):
 @app.route('/book/<int:book_id>')
 def book (book_id):
 	book = session.query(Book).filter_by(id=book_id).one()
-	return render_template('ihome.html', book=book)
+	return render_template('home.html', book=book)
 
 
 

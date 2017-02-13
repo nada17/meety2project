@@ -13,7 +13,7 @@
 <div class="product">
 	{% for item in items %}
 	<a href={{url_for('book', book_id=item.id)}}>
-		<p> {{item.name}}</p>
+		<p> {{item.title}}</p>
 		<img src={{item.imgurlbook}} height="250">
 	</a>
 	{% endfor %}
