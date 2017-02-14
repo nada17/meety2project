@@ -5,10 +5,14 @@
 </head>
 <body>
 <h1>Your information</h1>
+{%if imgurluser != "" %}
+<img src="{{user.imgurluser}}" height="150"> <br>
+{% endif %}
+
 {{user.imgurluser}} <br>
 Name: {{user.firstname}} {{user.lastname}} <br>
-Email: {{user.email}}
-Date of Birth: {{user.dob}}
-Phone number: {{user.phonenumber}}
+Email: {{user.email}} <br>
+Date of Birth: {{user.dob}} <br>
+Phone number: {{user.phonenumber}} <br
 </body>
 </html>

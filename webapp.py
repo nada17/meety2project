@@ -20,19 +20,13 @@ def verify_password(email, password1):
 		return True
 	return False
 
-# def hash_password(password):
-# 	return pwd_context.encrypt(password)
-
-
-
 @app.route('/')
-def world():
-	return render_template('home.html')
-@app.route('/home')
 def home():
+	user=None
+	if 'id' in login_session:
+		user=session.query(User).filter_by(id=login_session['id']).first()
 	items = session.query(Book).all()
-	print ("home")
-	return render_template('home.html', items = items)
+	return render_template('home.html', items = items, user=user)
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def signup():
@@ -83,13 +77,15 @@ def login():
 			login_session['firstname']= user.firstname
 			login_session['lastname'] = user.lastname
 			login_session['email'] = user.email
-			print("LogIn")
 			login_session['id'] = user.id
 			return redirect(url_for('home'))
 		
 
 @app.route('/newbook', methods=['GET', 'POST'])
 def newbook():
+	if 'id' not in login_session:
+		flash("You need to be logged in to add a book")
+		return redirect(url_for('newbook'))
 	if request.method == 'POST':
 		title = request.form['title']
 		author = request.form['author']
@@ -110,18 +106,18 @@ def newbook():
 
 
 
-@app.route('/user/<email>')
+@app.route('/user/<string:user_email>')
 def user_profile(user_email):
-	user_email = session.query(User).filter_by(email).first(user_email=user_email)
-	return render_template('user.html', user_email=user_email)
-
+	user = session.query(User).filter_by(email=user_email).first()
+	return render_template('user.html', user=user)
 
 
 
 @app.route('/book/<int:book_id>')
 def book (book_id):
-	book = session.query(Book).filter_by(id=book_id).one()
-	return render_template('home.html', book=book)
+	book = session.query(Book).filter_by(id=book_id).first()
+	user=session.query(User).filter_by(id=user_id).first()
+	return render_template('home.html', book=book, user=user)
 
 
 

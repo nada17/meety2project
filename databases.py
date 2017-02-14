@@ -30,11 +30,17 @@ class User(Base):
 	dob = Column(String)
 	phonenumber = Column(String)
 
+
 	def hash_password(self, password):
 		self.hash_password = pwd_context.encrypt(password)
 
 	def verify_password(self, spassword):
 		return pwd_context.verify(password, self.hash_password)
+
+
+
+
+
 
 
 engine = create_engine('sqlite:///databases.db')
