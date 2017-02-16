@@ -59,6 +59,9 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	if 'id' in login_session:
+		flash("You are already logged in")
+		return redirect(url_for('home'))
 	if request.method == 'GET':
 		return render_template('login.html')
 	elif request.method == 'POST':
@@ -86,6 +89,8 @@ def newbook():
 	if 'id' not in login_session:
 		flash("You need to be logged in to add a book")
 		return redirect(url_for('newbook'))
+	elif 'id' in login_session:
+		owner = id
 	if request.method == 'POST':
 		title = request.form['title']
 		author = request.form['author']
@@ -114,10 +119,17 @@ def user_profile(user_email):
 
 
 @app.route('/book/<int:book_id>')
-def book (book_id):
-	book = session.query(Book).filter_by(id=book_id).first()
-	user=session.query(User).filter_by(id=user_id).first()
-	return render_template('home.html', book=book, user=user)
+def book(book_id):
+	bookbook = session.query(Book).filter_by(id=book_id).first()
+	return render_template('book.html', book=bookbook)
+
+
+# @app.route('/book/<int:book_id>/taken', methods=['POST'])
+# def taken(book_id):
+# 	if 'id' not in login_session:
+# 		flash("You must be logged in to take a book")
+# 		return redirect(url_for('login'))
+# 	book = session.query(Book).filter_by(id=book_id).first()
 
 
 
@@ -125,7 +137,7 @@ def book (book_id):
 def logout():
 	if 'id' not in login_session:
 		flash("You must be logged in order to log out")
-		return redirect(url_for('login'))
+		return redirect(url_for('home'))
 	del login_session['firstname']
 	del login_session['lastname']
 	del login_session['email']

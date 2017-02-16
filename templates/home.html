@@ -9,18 +9,35 @@ ul {
 	padding: 20px;
 }
 </style>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div>
+{% for message in get_flashed_messages() %}
+
+		<ul>
+			<li> <strong> {{ message }} </strong> </li>
+		</ul>
+	{% endfor %}
+</div>
+
 <form action="{{url_for('logout')}}" method="post">
 	<input type="submit" value="logout" name="logout">
 </form>
+<form action="{{url_for('login')}}" method="get">
+	<input type="submit" value="login" name="login">
+</form>
 <ul>
 	<li> <a href="{{url_for('user_profile', user_email=user.email)}}">Profile</a></li>
-	<form action="{{url_for('newbook'}}" method="POST">
-	<input type="sumbit" value = "newbook" name="New">    <a href="{{url_for('newbook')}}">Add a new book</a>
-	</form>
-</ul>
+	<li>  <a href="{{url_for('newbook')}}">Add a new book</a> </li>
 
+
+</ul>
+	</form>
 
 {% if items==[] %}
 <p>There are currently no items in the catalog. </p>
