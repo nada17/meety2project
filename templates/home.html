@@ -2,20 +2,76 @@
 <html>
 <head>
 	<title> Available Books </title>
+
+<ul class="topnav" id ="myTopnav">
+	<li> <a href="{{url_for('user_profile', user_email=user.email)}}">Profile</a></li>
+
+	<li>  <a href="{{url_for('newbook')}}">Add a new book</a> </li>
+
+	<li>  <a href="{{url_for('about')}}">BOOKEND</a> </li>
+
+	<li><form action="{{url_for('logout')}}" method="post">
+	<input type="submit" value="Logout" name="logout">
+	</form> </li>
+
+	<li><form action="{{url_for('login')}}" method="get">
+	<input type="submit" value="Login" name="login">
+	</form></li> 
+
+</ul>
+
 <style>
 ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 20px;
 }
+ul.topnav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #6d2e46;
+}
+ul.topnav li {float: left;}
+ul.topnav li {
+	display: inline-block;
+	color: #d5b9b2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	transition: 0.2s;
+	font-size: 20px
+}
+ul.topnav li a{
+	display: inline-block;
+	color: #d5b9b2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	transition: 0.2s;
+	font-size: 20px
+}
+
+ul.topnav li :hover {background-color: #ece2d0}
+ul.topnav li :hover a{background-color: #ece2d0}
+ul.topnav li.icon {display: none; }
+
+
+
+body {
+background-color: #d5b9b2;
+color: black;
+text-align: center;
+font-family: times;
+font-size: 15px;
+margin: 15px;
+}
+
 </style>
-<meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
 <div>
 {% for message in get_flashed_messages() %}
 
@@ -25,19 +81,6 @@ ul {
 	{% endfor %}
 </div>
 
-<form action="{{url_for('logout')}}" method="post">
-	<input type="submit" value="logout" name="logout">
-</form>
-<form action="{{url_for('login')}}" method="get">
-	<input type="submit" value="login" name="login">
-</form>
-<ul>
-	<li> <a href="{{url_for('user_profile', user_email=user.email)}}">Profile</a></li>
-	<li>  <a href="{{url_for('newbook')}}">Add a new book</a> </li>
-
-
-</ul>
-	</form>
 
 {% if items==[] %}
 <p>There are currently no items in the catalog. </p>

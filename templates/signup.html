@@ -1,7 +1,23 @@
 <!DOCTYPE html>
 <html>
 <h1> Sign up </h1>
+<head>
+	<style>
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 20px;
+}
+body {
+background-color: #cebebe;
+color: black;
+text-align: center;
+font-family: times;
+font-size: 25px;
+margin: 15px;
 
+</style>
+</head>
 <div class = 'flash'>
 	{% for message in get_flashed_messages() %}
 

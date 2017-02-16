@@ -116,12 +116,14 @@ def user_profile(user_email):
 	user = session.query(User).filter_by(email=user_email).first()
 	return render_template('user.html', user=user)
 
-
+@app.route('/about/')
+def about():
+	return render_template('about.html')
 
 @app.route('/book/<int:book_id>')
 def book(book_id):
-	bookbook = session.query(Book).filter_by(id=book_id).first()
-	return render_template('book.html', book=bookbook)
+	book = session.query(Book).filter_by(id=book_id).first()
+	return render_template('book.html', book=book)
 
 
 # @app.route('/book/<int:book_id>/taken', methods=['POST'])
